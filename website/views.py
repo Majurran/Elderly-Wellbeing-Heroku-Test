@@ -16,66 +16,63 @@ USER_HOME_HREF = "/user"
 GUEST_HOME_HREF = "/user/inputs"
 
 
+ROOMS = ["lounge", "news", "games", "coding"]
+
 # ===============================================================================================================
 # ==================================================== CHAT ====================================================
 # ===============================================================================================================
 from flask import session, redirect, render_template, request
-from .forms import LoginForm
-
-
-@views.route('/rooms', methods=['GET', 'POST'])
-def rooms():
-    """Login form to enter a room."""
-    form = LoginForm()
-    if form.validate_on_submit():
-        session['name'] = form.name.data
-        session['room'] = form.room.data
-        return redirect(url_for('.chat'))
-    elif request.method == 'GET':
-        form.name.data = session.get('name', '')
-        form.room.data = session.get('room', '')
-    return render_template('rooms.html', form=form)
-
-
-@views.route('/chat')
-def chat():
-    """Chat room. The user's name and room must be stored in
-    the session."""
-    name = session.get('name', '')
-    room = session.get('room', '')
-    if name == '' or room == '':
-        return redirect(url_for('.index'))
-    return render_template('chat.html', name=name, room=room)
-
-from flask import session
-from flask_socketio import emit, join_room, leave_room
+#from .forms import LoginForm
+from flask_socketio import SocketIO, join_room, leave_room, send
+import os
+import time
 from . import socketio
+@views.route("/chat", methods=['GET', 'POST'])
+def chat():
 
 
-@socketio.on('joined', namespace='/chat')
-def joined(message):
-    """Sent by clients when they enter a room.
-    A status message is broadcast to all people in the room."""
-    room = session.get('room')
+
+    return render_template("chat.html", username="bob", rooms=ROOMS)
+
+
+@views.errorhandler(404)
+def page_not_found(e):
+    # note that we set the 404 status explicitly
+    return render_template('404.html'), 404
+
+
+@socketio.on('incoming-msg')
+def on_message(data):
+    """Broadcast messages"""
+
+    msg = data["msg"]
+    username = data["username"]
+    room = data["room"]
+    # Set timestamp
+    time_stamp = time.strftime('%b-%d %I:%M%p', time.localtime())
+    send({"username": username, "msg": msg, "time_stamp": time_stamp}, room=room)
+
+
+@socketio.on('join')
+def on_join(data):
+    """User joins a room"""
+
+    username = data["username"]
+    room = data["room"]
     join_room(room)
-    emit('status', {'msg': session.get('name') + ' has entered the room.'}, room=room)
+
+    # Broadcast that new user has joined
+    send({"msg": username + " has joined the " + room + " room."}, room=room)
 
 
-@socketio.on('text', namespace='/chat')
-def text(message):
-    """Sent by a client when the user entered a new message.
-    The message is sent to all people in the room."""
-    room = session.get('room')
-    emit('message', {'msg': session.get('name') + ':' + message['msg']}, room=room)
+@socketio.on('leave')
+def on_leave(data):
+    """User leaves a room"""
 
-
-@socketio.on('left', namespace='/chat')
-def left(message):
-    """Sent by clients when they leave a room.
-    A status message is broadcast to all people in the room."""
-    room = session.get('room')
+    username = data['username']
+    room = data['room']
     leave_room(room)
-    emit('status', {'msg': session.get('name') + ' has left the room.'}, room=room)
+    send({"msg": username + " has left the room"}, room=room)
 
 
 
