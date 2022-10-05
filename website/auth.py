@@ -3,7 +3,7 @@ from .models import User, NursingHome, InputOptions
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-
+import random
 
 auth = Blueprint('auth', __name__)
 
@@ -48,10 +48,19 @@ def login():
 
 @auth.route('/sign-up-nursing-home', methods=['GET', 'POST'])
 def sign_up_nursing_home():
+    
+    number_range = (100000,999999)    
+    random_generated_nursing_home_id = random.randrange(*number_range)
+    
+    # Choose another random number if somehow got an existing nursing home ID already made in database
+    while NursingHome.query.get(random_generated_nursing_home_id):
+        print("Nursing Home ID already exist in the database: ", random_generated_nursing_home_id)
+        random_generated_nursing_home_id = random.randrange(*number_range)
+        
     if request.method == 'POST':
         # Creates the one admin profile for each nursing home
         nursing_home_name = request.form.get('nursing-home-name')
-        nursing_home_id = request.form.get('homeId')
+        # nursing_home_id = request.form.get('homeId')
         email = request.form.get('email')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
@@ -71,21 +80,21 @@ def sign_up_nursing_home():
             flash('Passwords don\'t match.', category='error')
         elif len(password1) < 6:
             flash('Password must be at least 6 characters.', category='error')
-        elif not nursing_home_id.isdigit():
-            flash('Nursing home ID must use digits only.', category='error')
-        elif len(nursing_home_id) < 6:
-            flash('Nursing home ID must be at least 6 digits.', category='error')
+        # elif not nursing_home_id.isdigit():
+        #     flash('Nursing home ID must use digits only.', category='error')
+        # elif len(nursing_home_id) < 6:
+        #     flash('Nursing home ID must be at least 6 digits.', category='error')
         elif not agreeCheck:
             flash('Must agree to Terms and Conditions.', category='error')
         else:
             # Add new NursingHome
-            new_nursing_home = NursingHome(id=nursing_home_id, name=nursing_home_name)
+            new_nursing_home = NursingHome(id=random_generated_nursing_home_id, name=nursing_home_name)
             db.session.add(new_nursing_home)
             db.session.commit()
             
             # Can use the generate_password_hash(password1) in production but for developing/testing no need 
             # Add new User (admin/guest) account associated with new NursingHome
-            new_admin_account = User(email=email, password=password1, nursing_home_id=nursing_home_id, admin=True)
+            new_admin_account = User(email=email, password=password1, nursing_home_id=random_generated_nursing_home_id, admin=True)
             db.session.add(new_admin_account)
             db.session.commit()
             
@@ -117,18 +126,20 @@ def sign_up_nursing_home():
             ]
             
             for i,activity in enumerate(activity_list):
-                new_activity = InputOptions(category="activity", name=activity, file_path=activity_list_file_path[i], nursing_home_id=nursing_home_id)
+                new_activity = InputOptions(category="activity", name=activity, file_path=activity_list_file_path[i],
+                                            nursing_home_id=random_generated_nursing_home_id)
                 db.session.add(new_activity)
                 db.session.commit()
                 
             for i,wellbeing in enumerate(wellbeing_list):
-                new_wellbeing = InputOptions(category="wellbeing", name=wellbeing, file_path=wellbeing_list_file_path[i], nursing_home_id=nursing_home_id)
+                new_wellbeing = InputOptions(category="wellbeing", name=wellbeing, file_path=wellbeing_list_file_path[i],
+                                            nursing_home_id=random_generated_nursing_home_id)
                 db.session.add(new_wellbeing)
                 db.session.commit()
             
-            return render_template("auth/sign_up.html", success='OK')
+            return render_template("auth/sign_up.html", success='OK', nursing_home_id=random_generated_nursing_home_id)
 
-    return render_template("auth/sign_up.html", user=current_user, success='')
+    return render_template("auth/sign_up.html", user=current_user, success='', nursing_home_id=random_generated_nursing_home_id)
 
 
 @auth.route('/sign-up-resident', methods=['GET', 'POST'])

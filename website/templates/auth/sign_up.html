@@ -87,18 +87,18 @@
                    aria-labelledby="nursing-login-tab">
                 <div class="form-group">
                   <input type="text"
-                         class="form-control"
-                         id="nursing-home-name"
-                         name="nursing-home-name"
-                         placeholder="Enter name of nursing home"
-                         required/>
+                       class="form-control"
+                       id="homeId"
+                       name="homeId"
+                       placeholder="Government Verification Code"
+                       required/>
                 </div>
                 <div class="form-group">
                   <input type="text"
                          class="form-control"
-                         id="homeId"
-                         name="homeId"
-                         placeholder="Nursing home ID"
+                         id="nursing-home-name"
+                         name="nursing-home-name"
+                         placeholder="Enter name of nursing home"
                          required/>
                 </div>
                 <div class="form-group">
@@ -167,6 +167,10 @@
                         align-items: center;">
               <div class="form-row mb-2">Thanks for joining Elderly Home</div>
               <div class="form-row mb-2">Nursing Home Account Created</div>
+              <div class="form-row mb-2">
+                <span style="font-weight: bold;">Your Nursing Home ID is: {{ nursing_home_id }}</span>
+              </div>
+              <div class="form-row mb-2">Please remember your Nursing Home ID for guest login and signing up new resident account.</div>
             </div>
             <div class="modal-footer">
               <button type="button"
