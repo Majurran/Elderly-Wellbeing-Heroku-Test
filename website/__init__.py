@@ -5,7 +5,7 @@ from flask_login import LoginManager
 import os 
 
 db = SQLAlchemy()
-DB_NAME = "database_ver11.db"  # Change name if the models.py gets updated for now
+DB_NAME = "database_ver12.db"  # Change name if the models.py gets updated for now
 
 from flask_socketio import SocketIO
 socketio = SocketIO()
