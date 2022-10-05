@@ -222,6 +222,32 @@
                 onclick="submitMessage()">
           Submit
         </button>
+        <br>
+        <br>
+        <br>
+        <div>
+          <h5>Do you suffer from any aches or pains on a regular basis?</h5>
+        </div>
+        <br>
+        <div id="regular_pain_ache"
+             name="regular_pain_ache"
+             class="reaction-icon-grid"
+             style="width: 260px">
+          <div id="regular_pain_ache_yes" name="regular_pain_ache_yes">
+            <span style="color: #c82333">YES</span>
+          </div>
+          <div id="regular_pain_ache_no" name="regular_pain_ache_no">
+            <span style="color: #1c7430">NO</span>
+          </div>
+        </div>
+        <br>
+        <button type="button"
+                class="btn btn-danger"
+                data-toggle="modal"
+                data-target="#exampleModal"
+                onclick="submitRegularPain()">
+          Submit
+        </button>
       </div>
     </div>
     <!-- Modal -->
@@ -270,6 +296,11 @@
            readonly/>
     <input id="input_food_quality"
            name="input_food_quality"
+           value=""
+           type="hidden"
+           readonly/>
+    <input id="input_regular_pain_ache"
+           name="input_regular_pain_ache"
            value=""
            type="hidden"
            readonly/>
@@ -351,6 +382,21 @@
             div.css("background", '#f15a24')
         }
     })
+    $("#regular_pain_ache").on("click", "div", function(event) {
+      let div = $(this)
+      if (div.attr("choosed") == 'Y') {
+          div.attr("choosed", '')
+          div.style.background = '#e6e6e6'
+      } else {
+          $.each(div.siblings(), function(i, item) {
+              item.setAttribute("choosed", '')
+              item.style.background = '#e6e6e6'
+          })
+  
+          div.attr("choosed", 'Y')
+          div.css("background", '#f15a24')
+      }
+  })
     
     // ===========================================================================================================================
     // ======================================= BACKEND FUNCTIONALITY FOR HTTP POST ===============================================
@@ -385,6 +431,11 @@
         CATEGORY_TYPE = "message_text_area";
         $('#infoId').html('Your input response have been submitted!')
     }
+
+    function submitRegularPain() {
+      CATEGORY_TYPE = "regular_pain_ache";
+      $('#infoId').html('Your input response to regular pain/ache have been submitted!')
+  }
     
     function submitInput() {
         if (CATEGORY_TYPE == "activity") {
@@ -427,6 +478,14 @@
                     $('#input_food_quality').val($('#input_food_quality').val() + div.getAttribute("id") + ',');
                 }
             })
+        } else if (CATEGORY_TYPE == "regular_pain_ache") {
+          $('#input_category').val('regular_pain_ache');
+          $('#input_regular_pain_ache').val('');
+          document.querySelectorAll('#regular_pain_ache div').forEach(div => {
+              if (div.getAttribute("choosed") == 'Y') {
+                  $('#input_regular_pain_ache').val($('#input_regular_pain_ache').val() + div.getAttribute("id") + ',');
+              }
+          })
         } else if (CATEGORY_TYPE == "message_text_area") {
             $('#input_category').val('message_text_area');
       }

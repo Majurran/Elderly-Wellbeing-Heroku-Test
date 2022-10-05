@@ -424,6 +424,7 @@ def user_input():
         difficulty_walking_csv = request.form.get('input_difficulty_walking')   # walk_difficult_1, walk_difficult_2, ..., walk_difficult_5
         food_quality_csv = request.form.get('input_food_quality')               # food_quality_1, food_quality_2, ..., food_quality_5
         text_area_msg_board = request.form.get('input_message_board')
+        regular_pain_ache_csv = request.form.get('input_regular_pain_ache')
         
         # print()
         # print(input_category)
@@ -434,6 +435,7 @@ def user_input():
         # print("CSV-medication:", medication_reaction_csv)
         # print("CSV-walk:", difficulty_walking_csv)
         # print("CSV-food:", food_quality_csv)
+        # print("CSV-pain:", regular_pain_ache_csv)
         
         # print()
 
@@ -442,6 +444,7 @@ def user_input():
         medication_reaction_list = medication_reaction_csv.split(',')[:-1]
         difficulty_walking_list = difficulty_walking_csv.split(',')[:-1]
         food_quality_list = food_quality_csv.split(',')[:-1]
+        regular_pain_ache_list = regular_pain_ache_csv.split(',')[:-1]
         
         input_activity_set = set(activity_list)
         input_wellbeing_set = set(wellbeing_list)
@@ -607,6 +610,34 @@ def user_input():
                 text_area_msg_board_input = Input(category="nursing_home_life_experience", name=text_area_msg_board, 
                                                 user_id=current_user.id, nursing_home_id=current_user.nursing_home_id)
             db.session.add(text_area_msg_board_input)
+            db.session.commit()
+            return redirect(request.url)
+    
+        # Convert the yes/no, 1-5 rating questions into right value
+        elif input_category == 'regular_pain_ache':
+            if len(regular_pain_ache_list) == 1:
+                if regular_pain_ache_list[0] == "regular_pain_ache_no":
+                    regular_pain_ache_input_value = "no"
+                elif regular_pain_ache_list[0] == "regular_pain_ache_yes":
+                    regular_pain_ache_input_value = "yes"
+                else:
+                    flash("Please don't change the id values for regular pain/ache")
+                    return redirect(request.url)
+            elif len(regular_pain_ache_list) == 0:
+                flash("No inputs submitted for regular pain/ache")
+                return redirect(request.url)
+            else:
+                flash("Please don't change the id values for regular pain/ache")
+                return redirect(request.url)
+            
+            # Insert Medication Y/N data to Database
+            if current_user.admin:
+                regular_pain_ache_input = Input(category="regular_pain_ache", name=regular_pain_ache_input_value, user_id=0, 
+                                            nursing_home_id=current_user.nursing_home_id)
+            else:
+                regular_pain_ache_input = Input(category="regular_pain_ache", name=regular_pain_ache_input_value, user_id=current_user.id, 
+                                            nursing_home_id=current_user.nursing_home_id)
+            db.session.add(regular_pain_ache_input)
             db.session.commit()
             return redirect(request.url)
         
