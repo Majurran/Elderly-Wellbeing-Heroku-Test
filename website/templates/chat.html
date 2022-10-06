@@ -1,5 +1,8 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block content %}
+<!-- <!DOCTYPE html>
+<html lang="en" dir="ltr"> -->
 
     <head>
         <meta charset="utf-8">
@@ -25,19 +28,8 @@
         <div class="wrapper">
 
             <!-- Nav bar start -->
-            <nav class="navbar navbar-expand-sm navbar-light fixed-top" style="background-color: #66a1ee">
+            <!-- <nav class="navbar navbar-expand-sm navbar-light fixed-top" style="background-color: #66a1ee"> -->
 
-                <div class="container-fluid">
-                    <div id="show-sidebar-button" class="cursor-pointer">
-                        <i class="fas fa-plus-circle "></i>
-                        <span>Rooms</span>
-                    </div>
-
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                    </button>
-
-                </div>
             </nav>
             <!-- Nav bar end -->
 
@@ -65,7 +57,7 @@
                    <div id="input-area" class="input-group mb-3">
                         <input type="text" id="user_message" class="form-control" placeholder="Type here..." aria-label="Type a message" aria-describedby="basic-addon2" autocomplete="off">
                         <div class="input-group-append">
-                            <button id="send_message" class="btn btn-warning" type="button">SEND <i class="fas fa-paper-plane"></i></button>
+                            <button id="send_message" class="btn btn-warning" type="button" style="background-color: #14a600;">SEND <i class="fas fa-paper-plane"></i></button>
                         </div>
                     </div>
                     <!-- Type message end -->
@@ -97,4 +89,5 @@
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 
     </body>
-</html>
+<!-- </html> -->
+{% endblock %}
