@@ -17,6 +17,7 @@ class User(db.Model, UserMixin):
     gender = db.Column(db.String(20))
     email = db.Column(db.String(200), unique=True)
     password = db.Column(db.String(200))
+    state = db.Column(db.String(200))
     nursing_home_id = db.Column(db.Integer, db.ForeignKey(NursingHome.id))
     
 class Input(db.Model):

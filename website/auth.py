@@ -156,6 +156,7 @@ def sign_up_resident():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
         agreeCheck = request.form.get('agreeCheck')
+        state = request.form.get('state')
 
         # Look up nursing_home_name and nursing_home_id to verify 
         verify_nursing_home_name = NursingHome.query.filter_by(name=nursing_home_name).first()
@@ -178,7 +179,7 @@ def sign_up_resident():
                 # Can use the generate_password_hash(password1) in production but for developing/testing no need 
                 # Add new User (admin/guest) account associated with new NursingHome
                 new_account = User(first_name=first_name, last_name=last_name, phone=phone_number, email=email, gender=gender,
-                                            password=password1, nursing_home_id=nursing_home_id, admin=False)
+                                            password=password1, nursing_home_id=nursing_home_id, admin=False, state=state)
                 db.session.add(new_account)
                 db.session.commit()
                 
