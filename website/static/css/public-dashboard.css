@@ -4,6 +4,8 @@
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
+  height:100%;
+  overflow:hidden;
   gap: 30px;
 }
 .project-container title {
@@ -12,7 +14,7 @@
   line-height: 25px;
 }
 
-.project-container article {
+.project-container .content {
   flex: 1;
   background-color: #efeff5;
   display: grid;
@@ -20,7 +22,6 @@
   padding-top: 0;
   padding-bottom: 0;
   margin-left: 15px;
-  /* max-width: 400px; */
   gap: 20px;
 }
 .project-container .project {

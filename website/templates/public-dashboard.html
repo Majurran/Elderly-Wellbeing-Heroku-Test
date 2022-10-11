@@ -9,7 +9,9 @@
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"/>
    <link rel="stylesheet" href="https://demos.creative-tim.com/paper-dashboard/assets/css/bootstrap.min.css"/>
    <link rel="stylesheet" href="https://demos.creative-tim.com/paper-dashboard/assets/css/paper-dashboard.min.css?v=2.0.1"/>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
+   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
    <!-- {% block title %}Dashboard{% endblock %} -->
    
 </head>
@@ -273,9 +275,9 @@
                                     <h5 class="card-title">Message Board</h5>
                                     <p class="card-category">Last Campaign Performance</p>
                                  </div>
-                                 <div class="card-body">
+                                 <div id="myDiv" class="card-body" style="overflow:hidden">
                                     <div class="project-container">
-                                       <article id="messages" style="background-color: white;">
+                                       <div class="content" style="background-color: white;">
                                          <!-- <div class="project title">
                                              Message Board
                                          </div> -->
@@ -290,7 +292,7 @@
                                              </div>
                                           </div>
                                          {% endfor %}
-                                       </article>
+                                       </div>
 
                                      </div>
                                  </div>
