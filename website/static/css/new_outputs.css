@@ -3,24 +3,14 @@
     flex-direction: column;
     width: 100vh;
     height: 100vh;
-    padding: 15px;
-    gap: 30px;
+    gap: 20px;
 }
 
 .header {
-    border: thick double hsl(48deg 90% 24%);
-    flex: 0.5 1 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color:#a76b24;
-    font-size: 30;
-    font-weight: 600;
+    font-size: 1.2rem;
 }
 .plots {
     display: flex;
-    justify-content: space-around;
-    gap: 100px;
 }
 
 .pie {
@@ -34,4 +24,35 @@
 .footer {
     flex: 1 1 auto;
     display: flex;
+}
+
+/* font-size */
+.navbar .navbar-nav .nav-link {
+    font-size: 1.2rem;
+    padding: 0.5rem 0.7rem;
+    line-height: 1.625rem;
+    margin-right: 3px;
+}
+
+.container .row {
+    display: flex;
+    max-width: 2000px;
+    justify-content: space-around;
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.container {
+    min-width: 1500px;
+    max-width: 1500px;
+}
+
+.row > .col-md-8 {
+    flex: 1 1 55%;
+    max-width: 55%;
+}
+
+.row > .col-md-4 {
+    flex: 1 1 45%;
+    max-width: 45%;
 }

@@ -114,7 +114,7 @@ def admin_dashboard_page():
 
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
-                width=580,
+                width=700,
                 height=425,
                 title="bar-chart"
     )
@@ -129,15 +129,18 @@ def admin_dashboard_page():
     percentage = [35, 15, 50]
     mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = percentage)])
     mood_pie_chart.update_layout(
-                width=425,
+                width=400,
                 height=425,
                 title = "pie-chart"
     )
     mood_ratio = json.dumps(mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
+    num_residents = 9760
+    num_nursing_home = 24
+
     return render_template("admin/new_outputs.html", user=current_user, graphJSON_mood=mood_ratio, graphJSON_activities=graphJSON_activities,
         num_elderly=num_elderly, emoji_name = emoji_name, activity_name=activity_name, percentage_happiness=percentage_happiness, 
-        name=get_name("admin"), home_href=ADMIN_HOME_HREF)
+        name=get_name("admin"), home_href=ADMIN_HOME_HREF,  num_residents=num_residents, num_nursing_home=num_nursing_home)
 
 
 @views.route('/admin/instructions', methods=['GET'])
