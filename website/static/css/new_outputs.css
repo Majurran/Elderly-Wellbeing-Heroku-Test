@@ -1,0 +1,37 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 100vh;
+    height: 100vh;
+    padding: 15px;
+    gap: 30px;
+}
+
+.header {
+    border: thick double hsl(48deg 90% 24%);
+    flex: 0.5 1 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:#a76b24;
+    font-size: 30;
+    font-weight: 600;
+}
+.plots {
+    display: flex;
+    justify-content: space-around;
+    gap: 100px;
+}
+
+.pie {
+    display: flex;
+    gap: 20px;
+    background-color: #fff;
+    color: #252422;
+    border: 0 none;
+}
+
+.footer {
+    flex: 1 1 auto;
+    display: flex;
+}

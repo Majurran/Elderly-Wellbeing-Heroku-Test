@@ -1,0 +1,49 @@
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/new_outputs.css') }}">
+</head>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<!--
+    Easy way to comment haha.
+-->
+    <div class="header">
+        Number of resident: 123
+    </div>
+
+    <div class="plots">
+        <div class="pie">
+            <div id="chart" class="chart"></div>
+            <div id="chart-two" class="chart-two"></div>
+        </div>
+
+        <div class="bar">
+            <div id="activity-chart" class="activity-chart"></div>
+        </div>
+    </div>
+    <div class="footer">
+        
+    </div>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script type="text/javascript">
+      var graphs = {{ graphJSON_mood | safe }};
+      Plotly.plot('chart', graphs, {});
+      Plotly.plot('chart-two', graphs, {})
+
+      var activites = {{ graphJSON_activities | safe }};
+      Plotly.plot('activity-chart', activites, {});
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </script>
+{% endblock %}

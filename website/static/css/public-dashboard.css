@@ -95,3 +95,11 @@
   flex:30%;
   max-width: 30%;
 }
+
+#navbar {
+ height: 100px;
+}
+
+.navbar-brand img {
+  height: 90px;
+}

@@ -109,32 +109,14 @@ def admin_home():
 @login_required
 def admin_dashboard_page():
     # Nursing home data
-    df = pd.DataFrame(dict(
-        date=["2020-01-10", "2020-02-10", "2020-03-10", "2020-04-10", "2020-05-10", "2020-06-10"],
-        happiness=[75, 78, 81, 71, 74, 79]
-    ))
-    # National Data
-    df2 = pd.DataFrame(dict(
-        date=["2020-01-10", "2020-02-10", "2020-03-10", "2020-04-10", "2020-05-10", "2020-06-10"],
-        happiness=[67, 75, 84, 64, 71, 75]
-    ))
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(name="Happiness Proportion - Macquarie Nursing Home",x=df["date"], y=df["happiness"]))
-    fig.add_trace(go.Scatter(name="Happiness Proportion - National Average",x=df2["date"], y=df2["happiness"]))
-    fig.update_layout(
-                width=580,
-                height=280,
-    )
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
-
-
     activity=["Cycling", "Travelling", "Boating", "Write Diary", "Drinking", "Playing the piano"]
     activity_frequency=[15, 17, 9, 12, 11,15]
 
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
                 width=580,
-                height=280,
+                height=425,
+                title="bar-chart"
     )
     graphJSON_activities = json.dumps(activities_bar_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -143,7 +125,17 @@ def admin_dashboard_page():
     activity_name = "Drinking"
     percentage_happiness = 80
 
-    return render_template("admin/outputs.html", user=current_user, graphJSON=graphJSON, graphJSON_activities=graphJSON_activities,
+    moods = ['happy', 'sad', 'ok']
+    percentage = [35, 15, 50]
+    mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = percentage)])
+    mood_pie_chart.update_layout(
+                width=425,
+                height=425,
+                title = "pie-chart"
+    )
+    mood_ratio = json.dumps(mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
+
+    return render_template("admin/new_outputs.html", user=current_user, graphJSON_mood=mood_ratio, graphJSON_activities=graphJSON_activities,
         num_elderly=num_elderly, emoji_name = emoji_name, activity_name=activity_name, percentage_happiness=percentage_happiness, 
         name=get_name("admin"), home_href=ADMIN_HOME_HREF)
 
