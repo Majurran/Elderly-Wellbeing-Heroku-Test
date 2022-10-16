@@ -363,11 +363,35 @@ def public_dashboard_page():
     )
     state_pie_chart = json.dumps(state_pie, cls=plotly.utils.PlotlyJSONEncoder)
 
-    df = pd.DataFrame(dict(
-        date=["2020-01-10", "2020-02-10", "2020-03-10", "2020-04-10", "2020-05-10", "2020-06-10"],
-        happiness=[75, 78, 81, 71, 74, 79]
-    ))
 
+    # This gets all the answers for the mobility question
+    # The group by groups the responses by the number. 
+    # This should return a list like [(1,10 responses),(2,5 responses)...etc]
+    print("The Mobility Proportion is")
+    mobility_proportion = Input.query.filter_by(category="difficulty_walking").with_entities(Input.name,Input.date).all()#.group_by(Input.name).all()
+    #print(mobility_proportion)
+    mobility_values = {}
+    for mobility_input in mobility_proportion:
+        if mobility_values.get((mobility_input[1].month,mobility_input[1].year)) is None:
+            mobility_values[(mobility_input[1].month,mobility_input[1].year)] = [mobility_input[0]]
+        else:
+            mobility_values[(mobility_input[1].month,mobility_input[1].year)].append(mobility_input[0])
+
+    dates = []
+    for key in mobility_values.keys():
+        dates.append("{}-{}-01".format(key[1],key[0]))
+
+    averages = []
+    for key, mobility_input_list in mobility_values.items():
+        input_sum = 0
+        for input_val in mobility_input_list:
+            input_sum += int(input_val)
+        averages.append(input_sum/len(mobility_input_list))
+    df = pd.DataFrame(dict(
+        date=dates,
+        happiness=averages
+    ))
+    df.sort_values('date', inplace=True)
     line_one = go.Figure()
     line_one.add_trace(go.Scatter(name="",x=df["date"], y=df["happiness"]))
     line_one.update_layout(
@@ -375,6 +399,31 @@ def public_dashboard_page():
                 height=260,
     )
     line_graph_one = json.dumps(line_one, cls=plotly.utils.PlotlyJSONEncoder)
+    
+    mobility_proportion = Input.query.filter_by(category="difficulty_walking").with_entities(Input.name,Input.date).all()#.group_by(Input.name).all()
+    #print(mobility_proportion)
+    mobility_values = {}
+    for mobility_input in mobility_proportion:
+        if mobility_values.get((mobility_input[1].month,mobility_input[1].year)) is None:
+            mobility_values[(mobility_input[1].month,mobility_input[1].year)] = [mobility_input[0]]
+        else:
+            mobility_values[(mobility_input[1].month,mobility_input[1].year)].append(mobility_input[0])
+
+    dates = []
+    for key in mobility_values.keys():
+        dates.append("{}-{}-01".format(key[1],key[0]))
+
+    averages = []
+    for key, mobility_input_list in mobility_values.items():
+        input_sum = 0
+        for input_val in mobility_input_list:
+            input_sum += int(input_val)
+        averages.append(input_sum/len(mobility_input_list))
+    df = pd.DataFrame(dict(
+        date=dates,
+        happiness=averages
+    ))
+    df.sort_values('date', inplace=True)
 
     line_two = go.Figure()
     line_two.add_trace(go.Scatter(name="",x=df["date"], y=df["happiness"]))
