@@ -258,17 +258,18 @@ def admin_edit_input_options():
                 
                 # Add back the default input options
                 # Default activity and wellbeing list from prototype design
-                activity_list = ['Go Cycling', 'Go Travel', 'Birthday Party', 'Go Boating', 'Write Diary', 'Drinking', 'Play the Piano', 'Online Shopping']
+                activity_list = ['Walking', 'Cycling', 'Reading', 'Play an Instrument', 'Sports', 'Gardening', 'Cooking', 'Puzzles', 'Socializing']
                 
                 activity_list_file_path = [
-                    "/static/input_option_img/Go Cycling.png",
-                    "/static/input_option_img/Go Travel.png",
-                    "/static/input_option_img/Birthday Party.png",
-                    "/static/input_option_img/Go Boating.png",
-                    "/static/input_option_img/Write Diary.png",
-                    "/static/input_option_img/Drinking.png",
-                    "/static/input_option_img/Play the Piano.png",
-                    "/static/input_option_img/Online Shopping.png"
+                    "/static/img/person_walking.png",
+                    "/static/img/Go Cycling.png",
+                    "/static/img/books_reading.png",
+                    "/static/img/Play the Piano.png",
+                    "/static/img/golf.png",
+                    "/static/img/potted_plant.png",
+                    "/static/img/cooking.png",
+                    "/static/img/puzzle_piece.png",
+                    "/static/img/talking.png"
                 ]
                 
                 for i,activity in enumerate(activity_list):
@@ -277,16 +278,16 @@ def admin_edit_input_options():
                     db.session.commit()
             
             elif category_type == "wellbeing":    
-                wellbeing_list = ['Happy', 'Upvote', 'Congratulations', 'Love', 'Upset', 'Sick', 'Sleeping', 'Angry']
+                wellbeing_list = ['Relaxed', 'At Ease', 'Cheerful', 'Enthusiastic', 'Tense', 'Frustrated', 'Down', 'Tired']
                 wellbeing_list_file_path = [
-                    "/static/input_option_img/Happy.png",
-                    "/static/input_option_img/Upvote.png",
-                    "/static/input_option_img/Congratulations.png",
-                    "/static/input_option_img/Love.png",
-                    "/static/input_option_img/Upset.png",
-                    "/static/input_option_img/Sick.png",
-                    "/static/input_option_img/Sleeping.png",
-                    "/static/input_option_img/Angry.png"
+                    "/static/img/relaxed.png",
+                    "/static/img/at_ease.png",
+                    "/static/img/cheerful.png",
+                    "/static/img/Happy.png",
+                    "/static/img/tense.png",
+                    "/static/img/frustrated.png",
+                    "/static/img/down.png",
+                    "/static/img/tired.png"
                 ]
                 
                 for i,wellbeing in enumerate(wellbeing_list):

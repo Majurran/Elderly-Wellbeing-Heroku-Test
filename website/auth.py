@@ -100,29 +100,54 @@ def sign_up_nursing_home():
             
             # Add default input options for wellbeing and activity for new NursingHome
             # Default activity and wellbeing list from prototype design
-            activity_list = ['Go Cycling', 'Go Travel', 'Birthday Party', 'Go Boating', 'Write Diary', 'Drinking', 'Play the Piano', 'Online Shopping']
-            wellbeing_list = ['Happy', 'Upvote', 'Congratulations', 'Love', 'Upset', 'Sick', 'Sleeping', 'Angry']
+            activity_list = ['Walking', 'Cycling', 'Reading', 'Play an Instrument', 'Sports', 'Gardening', 'Cooking', 'Puzzles', 'Socializing']
+            wellbeing_list = ['Relaxed', 'At Ease', 'Cheerful', 'Enthusiastic', 'Tense', 'Frustrated', 'Down', 'Tired']
             
+            # All emoticons from iOS and twitter emojis from https://emojipedia.org
+            """
+            Activity Emojis
+                https://emojipedia.org/twitter/twemoji-14.0/person-walking/
+                https://emojipedia.org/apple/ios-9.3/bicycle/
+                https://emojipedia.org/apple/ios-15.4/books/
+                https://emojipedia.org/apple/ios-15.4/musical-keyboard/
+                https://emojipedia.org/apple/ios-15.4/flag-in-hole/
+                https://emojipedia.org/apple/ios-15.4/potted-plant/
+                https://emojipedia.org/apple/ios-15.4/cooking/
+                https://emojipedia.org/apple/ios-15.4/puzzle-piece/
+                https://emojipedia.org/skype/1.2/speaking-head/
+            
+            Wellbeing Emojis
+                https://emojipedia.org/apple/ios-15.4/smiling-face-with-smiling-eyes/
+                https://emojipedia.org/apple/ios-15.4/winking-face/
+                https://emojipedia.org/apple/ios-15.4/face-with-tongue/
+                https://emojipedia.org/apple/ios-15.4/grinning-face/
+                https://emojipedia.org/apple/ios-15.4/grimacing-face/
+                https://emojipedia.org/apple/ios-15.4/angry-face/
+                https://emojipedia.org/apple/ios-15.4/slightly-frowning-face/
+                https://emojipedia.org/apple/ios-15.4/sleeping-face/
+            """
+
             activity_list_file_path = [
-                "/static/input_option_img/Go Cycling.png",
-                "/static/input_option_img/Go Travel.png",
-                "/static/input_option_img/Birthday Party.png",
-                "/static/input_option_img/Go Boating.png",
-                "/static/input_option_img/Write Diary.png",
-                "/static/input_option_img/Drinking.png",
-                "/static/input_option_img/Play the Piano.png",
-                "/static/input_option_img/Online Shopping.png"
+                "/static/img/person_walking.png",
+                "/static/img/Go Cycling.png",
+                "/static/img/books_reading.png",
+                "/static/img/Play the Piano.png",
+                "/static/img/golf.png",
+                "/static/img/potted_plant.png",
+                "/static/img/cooking.png",
+                "/static/img/puzzle_piece.png",
+                "/static/img/talking.png"
             ]
             
             wellbeing_list_file_path = [
-                "/static/input_option_img/Happy.png",
-                "/static/input_option_img/Upvote.png",
-                "/static/input_option_img/Congratulations.png",
-                "/static/input_option_img/Love.png",
-                "/static/input_option_img/Upset.png",
-                "/static/input_option_img/Sick.png",
-                "/static/input_option_img/Sleeping.png",
-                "/static/input_option_img/Angry.png"
+                "/static/img/relaxed.png",
+                "/static/img/at_ease.png",
+                "/static/img/cheerful.png",
+                "/static/img/Happy.png",
+                "/static/img/tense.png",
+                "/static/img/frustrated.png",
+                "/static/img/down.png",
+                "/static/img/tired.png"
             ]
             
             for i,activity in enumerate(activity_list):
