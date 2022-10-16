@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for, current_app
 from flask_login import login_required, current_user
-from .models import InputOptions, Input, NursingHome
+from .models import InputOptions, Input, NursingHome,User
 from . import db
+from sqlalchemy import func
 from werkzeug.utils import secure_filename
 import json, os, uuid
 import plotly
@@ -109,8 +110,19 @@ def admin_home():
 @login_required
 def admin_dashboard_page():
     # Nursing home data
-    activity=["Cycling", "Travelling", "Boating", "Write Diary", "Drinking", "Playing the piano"]
-    activity_frequency=[15, 17, 9, 12, 11,15]
+    
+    activity=[]
+    activity_frequency = []
+    activity_count_pairs = Input.query.filter_by(category="activity").with_entities(Input.name, func.count(Input.name)).group_by(Input.name).all()
+    for actvity_count_pair in activity_count_pairs:
+        activity.append(actvity_count_pair[0])
+        activity_frequency.append(actvity_count_pair[1])
+
+    activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
+    activities_bar_chart.update_layout(
+                width=650,
+                height=600,
+    )
 
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
@@ -291,14 +303,18 @@ def admin_edit_input_options():
 # ===============================================================================================================
 @views.route('/public-dashboard', methods=['GET'])
 def public_dashboard_page():
-    activity=["Cycling", "Travelling", "Boating", "Write Diary", "Drinking", "Playing the piano"]
-    activity_frequency=[15, 17, 9, 12, 11,15]
+    #activity = list(set(Input.query.filter_by(category="activity").with_entities(Input.name))
+    activity=[]
+    activity_frequency = []
+    activity_count_pairs = Input.query.filter_by(category="activity").with_entities(Input.name, func.count(Input.name)).group_by(Input.name).all()
+    for actvity_count_pair in activity_count_pairs:
+        activity.append(actvity_count_pair[0])
+        activity_frequency.append(actvity_count_pair[1])
 
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
                 width=650,
                 height=600,
-                title = "title"
     )
 
     graph_activities = json.dumps(activities_bar_chart, cls=plotly.utils.PlotlyJSONEncoder)
@@ -324,9 +340,23 @@ def public_dashboard_page():
     )
     detailed_mood_ratio = json.dumps(detailed_mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
-    states = ['NSW', 'QLD', 'NT', 'WA', 'SA', 'VIC', 'ACT', "Tas"]
-    states_percentage = [12, 12, 12, 12, 12, 12, 12, 16]
-    state_pie = go.Figure(data = [go.Pie(labels = states, values = states_percentage)])
+    states = ['NSW', 'QLD', 'WA', 'SA', 'VIC', "Tas"]
+    
+    states_percentages = []
+    valid_states = []
+    for state in states:
+        users_by_state = User.query.filter_by(state=state).all()
+        print(users_by_state)
+        states_percentages.append(len(users_by_state))
+        if len(users_by_state) != 0:
+            valid_states.append(state)
+    total_population = sum(states_percentages)
+    if total_population != 0:
+        for index, count in enumerate(states_percentages):
+            states_percentages[index] = count/total_population * 100   
+    #states_percentages = [12, 12, 12, 12, 12, 12, 12, 16] 
+    print(states_percentages)
+    state_pie = go.Figure(data = [go.Pie(labels = valid_states, values = states_percentages)])
     state_pie.update_layout(
                 width=400,
                 height=400,
@@ -402,8 +432,8 @@ def public_dashboard_page():
 
     
 
-    num_residents = 9760
-    num_nursing_home = 24
+    num_residents = len(User.query.all())
+    num_nursing_home = len(NursingHome.query.all())
 
     return render_template("public-dashboard.html",graph_activities=graph_activities, mood_ratio=mood_ratio,
                             detailed_mood_ratio=detailed_mood_ratio, state_pie_chart=state_pie_chart,
