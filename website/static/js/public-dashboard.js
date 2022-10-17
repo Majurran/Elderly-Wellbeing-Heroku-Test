@@ -18,7 +18,7 @@ $(function () {
 
 $(document).ready(function() {
     setInterval(function () {
-
+        console.log("Started")
         start();
    }, 500); 
 });
@@ -30,7 +30,7 @@ function animateContent(direction) {
         animationOffset = 10;
     }
 
-    console.log("animationOffset:"+animationOffset);
+    // console.log("animationOffset:"+animationOffset);
     $('.content').animate({ "marginTop": (animationOffset)+ "px" }, 5000 *75);
 }
 
