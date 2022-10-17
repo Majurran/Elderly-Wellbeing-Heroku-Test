@@ -31,7 +31,7 @@ function animateContent(direction) {
     }
 
     console.log("animationOffset:"+animationOffset);
-    $('.content').animate({ "marginTop": (animationOffset)+ "px" }, 5000);
+    $('.content').animate({ "marginTop": (animationOffset)+ "px" }, 5000*100);
 }
 
 function up(){
