@@ -31,11 +31,16 @@ from . import socketio
 @views.route("/chat", methods=['GET', 'POST'])
 @login_required
 def chat():
-# I think it's current_user.first_name or something. 
-    #Need to change rooms to the list of activities. Preferably not hard coded.
 
-    #
-    return render_template("chat.html", user= current_user, username=current_user.first_name, rooms=ROOMS)
+
+    #        <title>Chat Away - RChat</title>
+    chat_rooms = ["lounge"] + list(set([element.name for element in Input.query.filter_by(category="activity").distinct(Input.name)]))
+    if current_user.first_name is None:
+        name = "Guest User"
+    else:
+        name = current_user.first_name
+    print(type(current_user.first_name))
+    return render_template("chat.html", user= current_user, username=name, rooms=chat_rooms)
 
 
 @views.errorhandler(404)
