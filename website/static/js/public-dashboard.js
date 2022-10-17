@@ -20,7 +20,7 @@ $(document).ready(function() {
     setInterval(function () {
 
         start();
-   }, 3000); 
+   }, 500); 
 });
 
 function animateContent(direction) {  
@@ -31,7 +31,7 @@ function animateContent(direction) {
     }
 
     console.log("animationOffset:"+animationOffset);
-    $('.content').animate({ "marginTop": (animationOffset)+ "px" }, 5000);
+    $('.content').animate({ "marginTop": (animationOffset)+ "px" }, 5000 *75);
 }
 
 function up(){
@@ -44,10 +44,10 @@ function down(){
 function start(){
  setTimeout(function () {
     down();
-}, 2000);
+}, 500);
  setTimeout(function () {
     up();
-}, 2000);
+}, 500);
    setTimeout(function () {
     console.log("wait...");
 }, 5000);
