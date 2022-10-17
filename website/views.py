@@ -314,8 +314,8 @@ def public_dashboard_page():
 
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
-                width=650,
-                height=600,
+                width=840,
+                height=470,
     )
 
     graph_activities = json.dumps(activities_bar_chart, cls=plotly.utils.PlotlyJSONEncoder)
@@ -400,7 +400,7 @@ def public_dashboard_page():
                 height=260,
     )
     line_graph_one = json.dumps(line_one, cls=plotly.utils.PlotlyJSONEncoder)
-    
+
     mobility_proportion = Input.query.filter_by(category="difficulty_walking").with_entities(Input.name,Input.date).all()#.group_by(Input.name).all()
     #print(mobility_proportion)
     mobility_values = {}
@@ -451,34 +451,35 @@ def public_dashboard_page():
     line_graph_four = json.dumps(line_four, cls=plotly.utils.PlotlyJSONEncoder)
 
 
-
-    
-    messages = ["Generating random paragraphs can be an excellent way for writers to get their creative flow going at the beginning of the day.\
-    The writer has no idea what topic the random paragraph will be about when it appears. This forces the writer to use creativity to complete \
-        one of three common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short story. No matter which of these challenges is undertaken, the writer is forced to use creativity to\
-                     incorporate the paragraph into their writing.", "Hi Eric ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto","Woof ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto", " ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto, ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto", " ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto, ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto", " ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto, ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto", " ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto, ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
-            option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
-                 ending paragraph in a short sto" ]
+    message_list = Input.query.filter_by(category="nursing_home_life_experience").with_entities(Input.name).all()
+    messages = [message[0] for message in message_list if message[0] != '']*100
+    print(messages)
+    # messages = ["Generating random paragraphs can be an excellent way for writers to get their creative flow going at the beginning of the day.\
+    # The writer has no idea what topic the random paragraph will be about when it appears. This forces the writer to use creativity to complete \
+    #     one of three common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short story. No matter which of these challenges is undertaken, the writer is forced to use creativity to\
+    #                  incorporate the paragraph into their writing.", "Hi Eric ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto","Woof ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto", " ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto, ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto", " ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto, ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto", " ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto, ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto", " ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto, ee common writing challenges. The writer can use the paragraph as the first one of a short story and build upon it. A second \
+    #         option is to use the random paragraph somewhere in a short story they create. The third option is to have the random paragraph be the\
+    #              ending paragraph in a short sto" ]
 
     
 

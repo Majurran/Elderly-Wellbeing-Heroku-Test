@@ -12,13 +12,7 @@ $(function () {
   });
 });
 
-// function produce_messages() {
 
-//     var element = document.createElement("div");
-//     element.appendChild(document.createTextNode('The man who mistook his wife for a hat'));
-//     document.getElementById('lc').appendChild(element);
-
-// }
 
 
 
