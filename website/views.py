@@ -141,14 +141,34 @@ def admin_dashboard_page():
     )
     graphJSON_activities = json.dumps(activities_bar_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
-    num_elderly = 4
-    emoji_name = "Happy"
-    activity_name = "Drinking"
-    percentage_happiness = 80
+    # Calculate the Detailed Breakdown of the moods
+    detailed_moods =[]
+    detailed_moods_frequency = []
+    # Query all mood responses
+    activity_count_pairs = Input.query.filter_by(category="wellbeing").with_entities(Input.name, func.count(Input.name)).group_by(Input.name).all()
+    # Sort into respective categories
+    for actvity_count_pair in activity_count_pairs:
+        detailed_moods.append(actvity_count_pair[0])
+        detailed_moods_frequency.append(actvity_count_pair[1])
+    # Calculate the percentages
+    detailed_percentage = []
+    for frequency in detailed_moods_frequency:
+        detailed_percentage.append(100* frequency / sum(detailed_moods_frequency))
+        
+    # Sort Percentages into Happy and Sad
+    overall_percentage = [0,0]
+    for index, mood in enumerate(detailed_moods):
+        # Happy Moods
+        if mood in ["Relaxed","At Ease","Cheerful","Enthusiastic"]:
+            overall_percentage[0] += detailed_percentage[index]
+            
+        # Sad Moods
+        else:
+            overall_percentage[1] += detailed_percentage[index]
 
-    moods = ['happy', 'sad', 'ok']
-    percentage = [35, 15, 50]
-    mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = percentage)])
+    moods = ['Happy', 'Sad']
+    
+    mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = overall_percentage)])
     mood_pie_chart.update_layout(
                 width=375,
                 height=470,
@@ -156,9 +176,7 @@ def admin_dashboard_page():
     )
     mood_ratio = json.dumps(mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
-    detailed_mood = ['happy', 'sad', 'ok']
-    detailed_percentage = [35, 15, 50]
-    detailed_mood_pie_chart = go.Figure(data = [go.Pie(labels = detailed_mood, values = detailed_percentage)])
+    detailed_mood_pie_chart = go.Figure(data = [go.Pie(labels = detailed_moods, values = detailed_percentage)])
     detailed_mood_pie_chart.update_layout(
                 width=375,
                 height=470,
@@ -172,7 +190,7 @@ def admin_dashboard_page():
 
 
     return render_template("admin/new_outputs.html", user=current_user, graphJSON_mood=mood_ratio, graphJSON_mood_detail = detailed_mood_ratio,
-    graphJSON_activities=graphJSON_activities,num_elderly=num_elderly, emoji_name = emoji_name, activity_name=activity_name, percentage_happiness=percentage_happiness, 
+    graphJSON_activities=graphJSON_activities,  
         name=get_name("admin"), home_href=ADMIN_HOME_HREF,  num_residents=num_residents, num_nursing_home=num_nursing_home,
         reload_time = datetime.now().strftime("%H:%M"))
 
@@ -352,23 +370,46 @@ def public_dashboard_page():
 
     graph_activities = json.dumps(activities_bar_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
-    # Mood Plots
-    moods = ['happy', 'sad', 'ok']
-    percentage = [35, 15, 50]
-    mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = percentage)])
+    # Calculate the Detailed Breakdown of the moods
+    detailed_moods =[]
+    detailed_moods_frequency = []
+    # Query all mood responses
+    activity_count_pairs = Input.query.filter_by(category="wellbeing").with_entities(Input.name, func.count(Input.name)).group_by(Input.name).all()
+    # Sort into respective categories
+    for actvity_count_pair in activity_count_pairs:
+        detailed_moods.append(actvity_count_pair[0])
+        detailed_moods_frequency.append(actvity_count_pair[1])
+    # Calculate the percentages
+    detailed_percentage = []
+    for frequency in detailed_moods_frequency:
+        detailed_percentage.append(100* frequency / sum(detailed_moods_frequency))
+        
+    # Sort Percentages into Happy and Sad
+    overall_percentage = [0,0]
+    for index, mood in enumerate(detailed_moods):
+        # Happy Moods
+        if mood in ["Relaxed","At Ease","Cheerful","Enthusiastic"]:
+            overall_percentage[0] += detailed_percentage[index]
+            
+        # Sad Moods
+        else:
+            overall_percentage[1] += detailed_percentage[index]
+
+    moods = ['Happy', 'Sad']
+    
+    mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = overall_percentage)])
     mood_pie_chart.update_layout(
-                width=319,
-                height=425,
-                title = "Overall Happy vs Sad Proportion"
+                width=375,
+                height=424,
+                title = "Overall Happy vs Sad Proportion",
+
     )
     mood_ratio = json.dumps(mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
-    detailed_mood = ['happy', 'sad', 'ok']
-    detailed_percentage = [35, 15, 50]
-    detailed_mood_pie_chart = go.Figure(data = [go.Pie(labels = detailed_mood, values = detailed_percentage)])
+    detailed_mood_pie_chart = go.Figure(data = [go.Pie(labels = detailed_moods, values = detailed_percentage)])
     detailed_mood_pie_chart.update_layout(
-                width=319,
-                height=425,
+                width=375,
+                height=424,
                 title = "Detailed Emotion Proportions"
     )
     detailed_mood_ratio = json.dumps(detailed_mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
@@ -426,6 +467,7 @@ def public_dashboard_page():
         date=dates,
         happiness=averages
     ))
+    df["date"] = pd.to_datetime(df["date"], format='%Y/%m/%d')
     df.sort_values('date', inplace=True)
     line_one = go.Figure(layout_yaxis_range=[0,6])
     line_one.add_trace(go.Scatter(name="",x=df["date"], y=df["happiness"]))
@@ -461,7 +503,8 @@ def public_dashboard_page():
         date=dates,
         food_quality_values=averages
     ))
-    df.sort_values('date', inplace=True)
+    df["date"] = pd.to_datetime(df["date"], format='%Y/%m/%d')
+    df.sort_values('date', inplace=True)       
 
     line_two = go.Figure(layout_yaxis_range=[0,6])
     line_two.add_trace(go.Scatter(name="",x=df["date"], y=df["food_quality_values"]))
@@ -497,6 +540,7 @@ def public_dashboard_page():
         date=dates,
         medication_values=averages
     ))
+    df["date"] = pd.to_datetime(df["date"], format='%Y/%m/%d')
     df.sort_values('date', inplace=True)
 
     line_three = go.Figure(layout_yaxis_range=[-0.1,1.1])
@@ -532,6 +576,7 @@ def public_dashboard_page():
         date=dates,
         pain_values=averages
     ))
+    df["date"] = pd.to_datetime(df["date"], format='%Y/%m/%d')
     df.sort_values('date', inplace=True)
 
     line_four = go.Figure(layout_yaxis_range=[-0.1,1.1])

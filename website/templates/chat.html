@@ -42,6 +42,15 @@
                     {% for room in rooms %}
                         <p id="{{ room|title }}" class="select-room cursor-pointer">{{ room|title }}</p>
                     {% endfor %}
+                    {% if user.is_authenticated %}
+                        <button type="button"
+                        class="btn btn-secondary"
+                        onclick="location.href='/admin'">Go Back</button>
+                    {% else %}
+                        <button type="button"
+                        class="btn btn-secondary"
+                        onclick="location.href='/user'">Go Back</button>
+                    {% endif%}
                 </nav>
                 <!-- Sidebar end -->
 
@@ -64,6 +73,7 @@
                 </div>
                 <!-- Rightside pannel end -->
             </div>
+
             <!-- Main section end -->
         </div>
         <!-- Wrapper end -->

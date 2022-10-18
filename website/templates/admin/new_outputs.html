@@ -197,9 +197,11 @@ style="background-color: rgb(140,98,57);
             <div id="activity-chart" class="activity-chart"></div>
         </div>
     </div> -->
-    <div class="footer">
-        
-    </div>
+   <div class="footer">
+   <button type="button"
+   class="btn btn-secondary"
+   onclick="location.href='/admin'">Go Back</button>
+   </div>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script type="text/javascript">
       var graphs = {{ graphJSON_mood | safe }};
