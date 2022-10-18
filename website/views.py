@@ -28,6 +28,8 @@ from flask_socketio import SocketIO, join_room, leave_room, send
 import os
 import time
 from . import socketio
+# Handles the chating feature with other people in our nursing home which our app offers
+# and returns those feature to the corresponding html page
 @views.route("/chat", methods=['GET', 'POST'])
 @login_required
 def chat():
@@ -43,12 +45,13 @@ def chat():
     return render_template("chat.html", user= current_user, username=name, rooms=chat_rooms)
 
 
+# Error handling for our chatbox
 @views.errorhandler(404)
 def page_not_found(e):
     # note that we set the 404 status explicitly
     return render_template('404.html'), 404
 
-
+# Allows sending messages between users 
 @socketio.on('incoming-msg')
 def on_message(data):
     """Broadcast messages"""
@@ -59,8 +62,7 @@ def on_message(data):
     # Set timestamp
     time_stamp = time.strftime('%b-%d %I:%M%p', time.localtime())
     send({"username": username, "msg": msg, "time_stamp": time_stamp}, room=room)
-
-
+   
 @socketio.on('join')
 def on_join(data):
     """User joins a room"""
@@ -111,6 +113,8 @@ def admin_home():
     return render_template("admin/home.html", user=current_user, name=get_name("admin"), home_href=ADMIN_HOME_HREF)
 
 
+# Handles the features (various plots, number of residents and nursing) for the private dashboard features  
+# and return them to its corresponding html page
 @views.route('/admin/outputs', methods=['GET'])
 @login_required
 def admin_dashboard_page():
@@ -307,6 +311,8 @@ def admin_edit_input_options():
 # ===============================================================================================================
 # =============================================== Public Dashboard ==============================================
 # ===============================================================================================================
+# Handles the features (various plots, number of residents and nursing home) for the public dashboard features  
+# and return them to its corresponding html page
 @views.route('/public-dashboard', methods=['GET'])
 def public_dashboard_page():
     #activity = list(set(Input.query.filter_by(category="activity").with_entities(Input.name))
