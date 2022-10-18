@@ -9,6 +9,7 @@ import plotly
 import plotly.express as px
 import plotly.graph_objs as go
 import pandas as pd
+from datetime import datetime
 views = Blueprint('views', __name__)
 
 # Hyper ref for base.html
@@ -315,7 +316,8 @@ def admin_edit_input_options():
 # and return them to its corresponding html page
 @views.route('/public-dashboard', methods=['GET'])
 def public_dashboard_page():
-    #activity = list(set(Input.query.filter_by(category="activity").with_entities(Input.name))
+
+    # Bar Chart For Activities
     activity=[]
     activity_frequency = []
     activity_count_pairs = Input.query.filter_by(category="activity").with_entities(Input.name, func.count(Input.name)).group_by(Input.name).all()
@@ -337,7 +339,7 @@ def public_dashboard_page():
 
     graph_activities = json.dumps(activities_bar_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
-
+    # Mood Plots
     moods = ['happy', 'sad', 'ok']
     percentage = [35, 15, 50]
     mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = percentage)])
@@ -358,22 +360,27 @@ def public_dashboard_page():
     )
     detailed_mood_ratio = json.dumps(detailed_mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
+
+    # Pie Chart for Proportion of responses from each state
     states = ['NSW', 'QLD', 'WA', 'SA', 'VIC', "Tas"]
-    
+
     states_percentages = []
+    # States from which there atleast 1 response
     valid_states = []
+    # Get the response percentages for each state
     for state in states:
         users_by_state = User.query.filter_by(state=state).all()
         print(users_by_state)
         states_percentages.append(len(users_by_state))
         if len(users_by_state) != 0:
             valid_states.append(state)
+
     total_population = sum(states_percentages)
     if total_population != 0:
         for index, count in enumerate(states_percentages):
             states_percentages[index] = count/total_population * 100   
-    #states_percentages = [12, 12, 12, 12, 12, 12, 12, 16] 
-    print(states_percentages)
+
+    
     state_pie = go.Figure(data = [go.Pie(labels = valid_states, values = states_percentages)])
     state_pie.update_layout(
                 width=400,
@@ -381,12 +388,9 @@ def public_dashboard_page():
     )
     state_pie_chart = json.dumps(state_pie, cls=plotly.utils.PlotlyJSONEncoder)
 
-
-    # This gets all the answers for the mobility question
-    # The group by groups the responses by the number. 
-    # This should return a list like [(1,10 responses),(2,5 responses)...etc]
+    # Monthly Overall Rating of Walking Difficulty
     print("The Mobility Proportion is")
-    mobility_proportion = Input.query.filter_by(category="difficulty_walking").with_entities(Input.name,Input.date).all()#.group_by(Input.name).all()
+    mobility_proportion = Input.query.filter_by(category="difficulty_walking").with_entities(Input.name,Input.date).all()
     #print(mobility_proportion)
     mobility_values = {}
     for mobility_input in mobility_proportion:
@@ -410,57 +414,115 @@ def public_dashboard_page():
         happiness=averages
     ))
     df.sort_values('date', inplace=True)
-    line_one = go.Figure()
+    line_one = go.Figure(layout_yaxis_range=[0,6])
     line_one.add_trace(go.Scatter(name="",x=df["date"], y=df["happiness"]))
     line_one.update_layout(
                 width=630,
                 height=260,
+                yaxis={"tickvals" : [1,2,3,4,5]}
     )
     line_graph_one = json.dumps(line_one, cls=plotly.utils.PlotlyJSONEncoder)
 
-    mobility_proportion = Input.query.filter_by(category="difficulty_walking").with_entities(Input.name,Input.date).all()#.group_by(Input.name).all()
+    # Monthly Overall Rating of Walking Difficulty
+    food_quality_proportion = Input.query.filter_by(category="food_quality").with_entities(Input.name,Input.date).all()#.group_by(Input.name).all()
     #print(mobility_proportion)
-    mobility_values = {}
-    for mobility_input in mobility_proportion:
-        if mobility_values.get((mobility_input[1].month,mobility_input[1].year)) is None:
-            mobility_values[(mobility_input[1].month,mobility_input[1].year)] = [mobility_input[0]]
+    food_quality_values = {}
+    for food_quality_input in food_quality_proportion:
+        if food_quality_values.get((food_quality_input[1].month,food_quality_input[1].year)) is None:
+            food_quality_values[(food_quality_input[1].month,food_quality_input[1].year)] = [food_quality_input[0]]
         else:
-            mobility_values[(mobility_input[1].month,mobility_input[1].year)].append(mobility_input[0])
+            food_quality_values[(food_quality_input[1].month,food_quality_input[1].year)].append(food_quality_input[0])
 
     dates = []
-    for key in mobility_values.keys():
+    for key in food_quality_values.keys():
         dates.append("{}-{}-01".format(key[1],key[0]))
 
     averages = []
-    for key, mobility_input_list in mobility_values.items():
+    for key, food_quality_input_list in food_quality_values.items():
         input_sum = 0
-        for input_val in mobility_input_list:
+        for input_val in food_quality_input_list:
             input_sum += int(input_val)
-        averages.append(input_sum/len(mobility_input_list))
+        averages.append(input_sum/len(food_quality_input_list))
+    print(averages)
     df = pd.DataFrame(dict(
         date=dates,
-        happiness=averages
+        food_quality_values=averages
     ))
     df.sort_values('date', inplace=True)
 
-    line_two = go.Figure()
-    line_two.add_trace(go.Scatter(name="",x=df["date"], y=df["happiness"]))
+    line_two = go.Figure(layout_yaxis_range=[0,6])
+    line_two.add_trace(go.Scatter(name="",x=df["date"], y=df["food_quality_values"]))
     line_two.update_layout(
                 width=630,
                 height=260,
+                yaxis={"tickvals" : [1,2,3,4,5]}
     )
     line_graph_two = json.dumps(line_two, cls=plotly.utils.PlotlyJSONEncoder)
 
-    line_three = go.Figure()
-    line_three.add_trace(go.Scatter(name="",x=df["date"], y=df["happiness"]))
+    # Medication
+    medication_proportion = Input.query.filter_by(category="medication").with_entities(Input.name,Input.date).all()
+
+    medication_values = {}
+    for medication_input in medication_proportion:
+        if medication_values.get((medication_input[1].month,medication_input[1].year)) is None:
+            medication_values[(medication_input[1].month,medication_input[1].year)] = [medication_input[0]]
+        else:
+            medication_values[(medication_input[1].month,medication_input[1].year)].append(medication_input[0])
+
+    dates = []
+    for key in medication_values.keys():
+        dates.append("{}-{}-01".format(key[1],key[0]))
+
+    averages = []
+    for key, medication_input_list in medication_values.items():
+        input_sum = 0
+        for input_val in medication_input_list:
+            input_sum += 1 if input_val=="yes" else 0
+        averages.append(input_sum/len(medication_input_list))
+    print(averages)
+    df = pd.DataFrame(dict(
+        date=dates,
+        medication_values=averages
+    ))
+    df.sort_values('date', inplace=True)
+
+    line_three = go.Figure(layout_yaxis_range=[-0.1,1.1])
+    line_three.add_trace(go.Scatter(name="",x=df["date"], y=df["medication_values"]))
     line_three.update_layout(
                 width=630,
                 height=260,
     )
     line_graph_three = json.dumps(line_three, cls=plotly.utils.PlotlyJSONEncoder)
 
-    line_four = go.Figure()
-    line_four.add_trace(go.Scatter(name="",x=df["date"], y=df["happiness"]))
+    # Aches and Pains
+    pain_proportion = Input.query.filter_by(category="regular_pain_ache").with_entities(Input.name,Input.date).all()
+
+    pain_values = {}
+    for pain_input in pain_proportion:
+        if pain_values.get((pain_input[1].month,pain_input[1].year)) is None:
+            pain_values[(pain_input[1].month,pain_input[1].year)] = [pain_input[0]]
+        else:
+            pain_values[(pain_input[1].month,pain_input[1].year)].append(pain_input[0])
+
+    dates = []
+    for key in pain_values.keys():
+        dates.append("{}-{}-01".format(key[1],key[0]))
+
+    averages = []
+    for key, pain_input_list in pain_values.items():
+        input_sum = 0
+        for input_val in pain_input_list:
+            input_sum += 1 if input_val=="yes" else 0
+        averages.append(input_sum/len(pain_input_list))
+    print(averages)
+    df = pd.DataFrame(dict(
+        date=dates,
+        pain_values=averages
+    ))
+    df.sort_values('date', inplace=True)
+
+    line_four = go.Figure(layout_yaxis_range=[-0.1,1.1])
+    line_four.add_trace(go.Scatter(name="",x=df["date"], y=df["pain_values"]))
     line_four.update_layout(
                 width=630,
                 height=260,
@@ -469,19 +531,21 @@ def public_dashboard_page():
 
 
     message_list = Input.query.filter_by(category="nursing_home_life_experience").with_entities(Input.name).all()
-    messages = [message[0] for message in message_list if message[0] != '']*100
+    messages = [message[0] for message in message_list if message[0] != '']
+    if len(messages) < 400:
+        messages = messages * round(500/len(messages))
+
 
 
     
 
     num_residents = len(User.query.all())
     num_nursing_home = len(NursingHome.query.all())
-
     return render_template("public-dashboard.html",graph_activities=graph_activities, mood_ratio=mood_ratio,
                             detailed_mood_ratio=detailed_mood_ratio, state_pie_chart=state_pie_chart,
                             line_graph_one=line_graph_one, line_graph_two=line_graph_two,
                             line_graph_three=line_graph_three, line_graph_four=line_graph_four, 
-                            num_residents=num_residents, num_nursing_home=num_nursing_home,sentences=messages)
+                            num_residents=num_residents, num_nursing_home=num_nursing_home,sentences=messages,reload_time = datetime.now().strftime("%H:%M"))
 
 
 # ===============================================================================================================
