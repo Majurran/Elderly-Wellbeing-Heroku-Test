@@ -325,8 +325,14 @@ def public_dashboard_page():
 
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
-                width=840,
+                width=640,
                 height=470,
+                margin=go.layout.Margin(
+                    l=1, #left margin
+                    r=1, #right margin
+                    b=1, #bottom margin
+                    t=1  #top margin
+                )
     )
 
     graph_activities = json.dumps(activities_bar_chart, cls=plotly.utils.PlotlyJSONEncoder)
