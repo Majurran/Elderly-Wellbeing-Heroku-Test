@@ -130,15 +130,14 @@ def admin_dashboard_page():
 
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
-                width=650,
-                height=600,
-    )
-
-    activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
-    activities_bar_chart.update_layout(
-                width=700,
-                height=425,
-                title="bar-chart"
+                width=630,
+                height=470,
+                margin=go.layout.Margin(
+                    l=1, #left margin
+                    r=1, #right margin
+                    b=1, #bottom margin
+                    t=1  #top margin
+                )
     )
     graphJSON_activities = json.dumps(activities_bar_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -151,18 +150,32 @@ def admin_dashboard_page():
     percentage = [35, 15, 50]
     mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = percentage)])
     mood_pie_chart.update_layout(
-                width=400,
-                height=425,
-                title = "pie-chart"
+                width=375,
+                height=470,
+                title = "Overall Happy vs Sad Proportion"
     )
     mood_ratio = json.dumps(mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
-    num_residents = 9760
-    num_nursing_home = 24
+    detailed_mood = ['happy', 'sad', 'ok']
+    detailed_percentage = [35, 15, 50]
+    detailed_mood_pie_chart = go.Figure(data = [go.Pie(labels = detailed_mood, values = detailed_percentage)])
+    detailed_mood_pie_chart.update_layout(
+                width=375,
+                height=470,
+                title = "Detailed Emotion Proportions"
+    )
+    detailed_mood_ratio = json.dumps(detailed_mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
-    return render_template("admin/new_outputs.html", user=current_user, graphJSON_mood=mood_ratio, graphJSON_activities=graphJSON_activities,
-        num_elderly=num_elderly, emoji_name = emoji_name, activity_name=activity_name, percentage_happiness=percentage_happiness, 
-        name=get_name("admin"), home_href=ADMIN_HOME_HREF,  num_residents=num_residents, num_nursing_home=num_nursing_home)
+
+    num_residents = len(User.query.all())
+    num_nursing_home = len(NursingHome.query.all())
+
+
+    return render_template("admin/new_outputs.html", user=current_user, graphJSON_mood=mood_ratio, graphJSON_mood_detail = detailed_mood_ratio,
+    graphJSON_activities=graphJSON_activities,num_elderly=num_elderly, emoji_name = emoji_name, activity_name=activity_name, percentage_happiness=percentage_happiness, 
+        name=get_name("admin"), home_href=ADMIN_HOME_HREF,  num_residents=num_residents, num_nursing_home=num_nursing_home,
+        reload_time = datetime.now().strftime("%H:%M"))
+
 
 
 @views.route('/admin/instructions', methods=['GET'])
@@ -346,7 +359,7 @@ def public_dashboard_page():
     mood_pie_chart.update_layout(
                 width=319,
                 height=425,
-                title = "title"
+                title = "Overall Happy vs Sad Proportion"
     )
     mood_ratio = json.dumps(mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
@@ -356,7 +369,7 @@ def public_dashboard_page():
     detailed_mood_pie_chart.update_layout(
                 width=319,
                 height=425,
-                title = "title"
+                title = "Detailed Emotion Proportions"
     )
     detailed_mood_ratio = json.dumps(detailed_mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 

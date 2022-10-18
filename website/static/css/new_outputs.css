@@ -56,3 +56,25 @@
     flex: 1 1 45%;
     max-width: 45%;
 }
+
+.d-flex.flex-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navbar-nav {
+    padding: 0.5rem 1rem;
+}
+
+body .navbar .navbar-nav .nav-link {
+    text-transform: none;
+}
+
+.container .card .card-title {
+    font-size: 2rem;
+}
+
+.container .card-category {
+    font-size: 1.4rem;
+}

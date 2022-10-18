@@ -93,9 +93,8 @@ style="background-color: rgb(140,98,57);
                </div>
                <div class="card-footer ">
                   <hr>
-                  <div class="stats">
-                     <i class="fa fa-refresh"></i>
-                     Update Now
+                  <div class="stats" style="color: #66615b;">
+                     <i class="fa fa-calendar" style="color: #66615b;"></i> Last Updated: {{reload_time}}
                   </div>
                </div>
             </div>
@@ -121,9 +120,8 @@ style="background-color: rgb(140,98,57);
                </div>
                <div class="card-footer ">
                   <hr>
-                  <div class="stats">
-                     <i class="fa fa-calendar-o"></i>
-                     Last day
+                  <div class="stats" style="color: #66615b;">
+                     <i class="fa fa-calendar" style="color: #66615b;"></i> Last Updated: {{reload_time}}
                   </div>
                </div>
             </div>
@@ -153,16 +151,10 @@ style="background-color: rgb(140,98,57);
                  <!-- <div id="Activities-Graph" class="Activities-Graph"></div> -->
               </div>
               <div class="card-footer ">
-                 <div class="legend">
-                    <i class="fa fa-circle text-primary"></i> Opened
-                    <i class="fa fa-circle text-warning"></i> Read
-                    <i class="fa fa-circle text-danger"></i> Deleted
-                    <i class="fa fa-circle text-gray"></i> Unopened
-                 </div>
-                 <hr>
-                 <div class="stats">
-                    <i class="fa fa-calendar"></i> Number of emails sent
-                 </div>
+               <hr>
+               <div class="stats" style="color: #66615b;">
+                  <i class="fa fa-calendar" style="color: #66615b;"></i> Last Updated: {{reload_time}}
+               </div>
               </div>
            </div>
         </div>
@@ -186,14 +178,10 @@ style="background-color: rgb(140,98,57);
                 </div>
               </div>
               <div class="card-footer">
-                 <div class="chart-legend">
-                    <i class="fa fa-circle text-info"></i> Tesla Model S
-                    <i class="fa fa-circle text-warning"></i> BMW 5 Series
-                 </div>
-                 <hr>
-                 <div class="card-stats">
-                    <i class="fa fa-check"></i> Data information certified
-                 </div>
+                               <hr>
+                  <div class="stats" style="color: #66615b;">
+                     <i class="fa fa-calendar" style="color: #66615b;"></i> Last Updated: {{reload_time}}
+                  </div>
               </div>
            </div>
         </div>
@@ -215,8 +203,9 @@ style="background-color: rgb(140,98,57);
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script type="text/javascript">
       var graphs = {{ graphJSON_mood | safe }};
+      var graphs_detail = {{ graphJSON_mood_detail | safe }};
       Plotly.plot('chart', graphs, {});
-      Plotly.plot('chart-two', graphs, {})
+      Plotly.plot('chart-two', graphs_detail, {})
 
       var activites = {{ graphJSON_activities | safe }};
       Plotly.plot('activity-chart', activites, {});
