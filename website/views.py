@@ -29,14 +29,11 @@ from flask_socketio import SocketIO, join_room, leave_room, send
 import os
 import time
 from . import socketio
-# Handles the chating feature with other people in our nursing home which our app offers
-# and returns those feature to the corresponding html page
+# Handles the chating page, allowing users to communicate with other people 
+
 @views.route("/chat", methods=['GET', 'POST'])
 @login_required
 def chat():
-
-
-    #        <title>Chat Away - RChat</title>
     chat_rooms = ["lounge"] + list(set([element.name for element in Input.query.filter_by(category="activity").distinct(Input.name)]))
     if current_user.first_name is None:
         name = "Guest User"
@@ -46,17 +43,10 @@ def chat():
     return render_template("chat.html", user= current_user, username=name, rooms=chat_rooms)
 
 
-# Error handling for our chatbox
-@views.errorhandler(404)
-def page_not_found(e):
-    # note that we set the 404 status explicitly
-    return render_template('404.html'), 404
 
 # Allows sending messages between users 
 @socketio.on('incoming-msg')
 def on_message(data):
-    """Broadcast messages"""
-
     msg = data["msg"]
     username = data["username"]
     room = data["room"]
@@ -64,21 +54,18 @@ def on_message(data):
     time_stamp = time.strftime('%b-%d %I:%M%p', time.localtime())
     send({"username": username, "msg": msg, "time_stamp": time_stamp}, room=room)
    
+# Handles User Joining the room.   
 @socketio.on('join')
 def on_join(data):
-    """User joins a room"""
-
     username = data["username"]
     room = data["room"]
     join_room(room)
 
-    # Broadcast that new user has joined
     send({"msg": username + " has joined the " + room + " room."}, room=room)
 
-
+# Handles User Leaving the room
 @socketio.on('leave')
 def on_leave(data):
-    """User leaves a room"""
 
     username = data['username']
     room = data['room']
@@ -120,14 +107,15 @@ def admin_home():
 @login_required
 def admin_dashboard_page():
     # Nursing home data
-    
+    # Bar Chart For Activities
     activity=[]
     activity_frequency = []
+    # Query all activites, group by activity name and get count
     activity_count_pairs = Input.query.filter_by(category="activity").with_entities(Input.name, func.count(Input.name)).group_by(Input.name).all()
     for actvity_count_pair in activity_count_pairs:
         activity.append(actvity_count_pair[0])
         activity_frequency.append(actvity_count_pair[1])
-
+    # Produce bar chart for activities
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
                 width=630,
@@ -139,6 +127,7 @@ def admin_dashboard_page():
                     t=1  #top margin
                 )
     )
+    # Encode plot to be read by html
     graphJSON_activities = json.dumps(activities_bar_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
     # Calculate the Detailed Breakdown of the moods
@@ -157,6 +146,8 @@ def admin_dashboard_page():
         
     # Sort Percentages into Happy and Sad
     overall_percentage = [0,0]
+    moods = ['Happy', 'Sad']
+    # Collect detailed moods into happy/sad emotions.
     for index, mood in enumerate(detailed_moods):
         # Happy Moods
         if mood in ["Relaxed","At Ease","Cheerful","Enthusiastic"]:
@@ -166,8 +157,7 @@ def admin_dashboard_page():
         else:
             overall_percentage[1] += detailed_percentage[index]
 
-    moods = ['Happy', 'Sad']
-    
+    # Produce Happy/Sad Pie Chart    
     mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = overall_percentage)])
     mood_pie_chart.update_layout(
                 width=375,
@@ -175,7 +165,7 @@ def admin_dashboard_page():
                 title = "Overall Happy vs Sad Proportion"
     )
     mood_ratio = json.dumps(mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
-
+    # Produce Detailed Mood Pie Chart
     detailed_mood_pie_chart = go.Figure(data = [go.Pie(labels = detailed_moods, values = detailed_percentage)])
     detailed_mood_pie_chart.update_layout(
                 width=375,
@@ -184,10 +174,9 @@ def admin_dashboard_page():
     )
     detailed_mood_ratio = json.dumps(detailed_mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
-
+    # Get the number of residents and number of nursing homes registered
     num_residents = len(User.query.all())
     num_nursing_home = len(NursingHome.query.all())
-
 
     return render_template("admin/new_outputs.html", user=current_user, graphJSON_mood=mood_ratio, graphJSON_mood_detail = detailed_mood_ratio,
     graphJSON_activities=graphJSON_activities,  
@@ -351,11 +340,13 @@ def public_dashboard_page():
     # Bar Chart For Activities
     activity=[]
     activity_frequency = []
+    # Query all activites, group by activity name and get count
     activity_count_pairs = Input.query.filter_by(category="activity").with_entities(Input.name, func.count(Input.name)).group_by(Input.name).all()
+    # Split Activities and Frequencies into lists for plotting
     for actvity_count_pair in activity_count_pairs:
         activity.append(actvity_count_pair[0])
         activity_frequency.append(actvity_count_pair[1])
-
+    # Bar Chart for Activities chosen by user
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
                 width=640,
@@ -404,6 +395,7 @@ def public_dashboard_page():
                 title = "Overall Happy vs Sad Proportion",
 
     )
+    # Encode plot to be read by html
     mood_ratio = json.dumps(mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
     detailed_mood_pie_chart = go.Figure(data = [go.Pie(labels = detailed_moods, values = detailed_percentage)])
@@ -412,6 +404,7 @@ def public_dashboard_page():
                 height=424,
                 title = "Detailed Emotion Proportions"
     )
+    # Encode plot to be read by html
     detailed_mood_ratio = json.dumps(detailed_mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
 
@@ -423,6 +416,7 @@ def public_dashboard_page():
     valid_states = []
     # Get the response percentages for each state
     for state in states:
+        # Query all users in each of the states, to get the count.
         users_by_state = User.query.filter_by(state=state).all()
         print(users_by_state)
         states_percentages.append(len(users_by_state))
@@ -440,12 +434,13 @@ def public_dashboard_page():
                 width=400,
                 height=400,
     )
+    # Encode plot to be read by html
     state_pie_chart = json.dumps(state_pie, cls=plotly.utils.PlotlyJSONEncoder)
 
     # Monthly Overall Rating of Walking Difficulty
-    print("The Mobility Proportion is")
+    # Query all mobility rating responses
     mobility_proportion = Input.query.filter_by(category="difficulty_walking").with_entities(Input.name,Input.date).all()
-    #print(mobility_proportion)
+
     mobility_values = {}
     for mobility_input in mobility_proportion:
         if mobility_values.get((mobility_input[1].month,mobility_input[1].year)) is None:
@@ -453,6 +448,7 @@ def public_dashboard_page():
         else:
             mobility_values[(mobility_input[1].month,mobility_input[1].year)].append(mobility_input[0])
 
+    # Get the Dates from which responses were received 
     dates = []
     for key in mobility_values.keys():
         dates.append("{}-{}-01".format(key[1],key[0]))
@@ -476,9 +472,11 @@ def public_dashboard_page():
                 height=260,
                 yaxis={"tickvals" : [1,2,3,4,5]}
     )
+    # Encode plot to be read by html
     line_graph_one = json.dumps(line_one, cls=plotly.utils.PlotlyJSONEncoder)
 
-    # Monthly Overall Rating of Walking Difficulty
+    # Monthly Overall Rating of Food Quality
+    # Query all activites, group by food quality rating chosen name and get count
     food_quality_proportion = Input.query.filter_by(category="food_quality").with_entities(Input.name,Input.date).all()#.group_by(Input.name).all()
     #print(mobility_proportion)
     food_quality_values = {}
@@ -487,7 +485,8 @@ def public_dashboard_page():
             food_quality_values[(food_quality_input[1].month,food_quality_input[1].year)] = [food_quality_input[0]]
         else:
             food_quality_values[(food_quality_input[1].month,food_quality_input[1].year)].append(food_quality_input[0])
-
+    
+    # Get the Dates from which responses were received 
     dates = []
     for key in food_quality_values.keys():
         dates.append("{}-{}-01".format(key[1],key[0]))
@@ -513,9 +512,11 @@ def public_dashboard_page():
                 height=260,
                 yaxis={"tickvals" : [1,2,3,4,5]}
     )
+    # Encode plot to be read by html
     line_graph_two = json.dumps(line_two, cls=plotly.utils.PlotlyJSONEncoder)
 
     # Medication
+    # Query all activites, group by mobility rating chosen name and get count
     medication_proportion = Input.query.filter_by(category="medication").with_entities(Input.name,Input.date).all()
 
     medication_values = {}
@@ -524,18 +525,20 @@ def public_dashboard_page():
             medication_values[(medication_input[1].month,medication_input[1].year)] = [medication_input[0]]
         else:
             medication_values[(medication_input[1].month,medication_input[1].year)].append(medication_input[0])
-
+    
+    # Get the Dates from which responses were received 
     dates = []
     for key in medication_values.keys():
         dates.append("{}-{}-01".format(key[1],key[0]))
 
+    # Calculate the average proportion of users suffering from medication side effects each month.
     averages = []
     for key, medication_input_list in medication_values.items():
         input_sum = 0
         for input_val in medication_input_list:
             input_sum += 1 if input_val=="yes" else 0
         averages.append(input_sum/len(medication_input_list))
-    print(averages)
+    
     df = pd.DataFrame(dict(
         date=dates,
         medication_values=averages
@@ -549,6 +552,7 @@ def public_dashboard_page():
                 width=630,
                 height=260,
     )
+    # Encode plot to be read by html
     line_graph_three = json.dumps(line_three, cls=plotly.utils.PlotlyJSONEncoder)
 
     # Aches and Pains
@@ -560,7 +564,8 @@ def public_dashboard_page():
             pain_values[(pain_input[1].month,pain_input[1].year)] = [pain_input[0]]
         else:
             pain_values[(pain_input[1].month,pain_input[1].year)].append(pain_input[0])
-
+    
+    # Get the Dates from which responses were received 
     dates = []
     for key in pain_values.keys():
         dates.append("{}-{}-01".format(key[1],key[0]))
@@ -571,7 +576,6 @@ def public_dashboard_page():
         for input_val in pain_input_list:
             input_sum += 1 if input_val=="yes" else 0
         averages.append(input_sum/len(pain_input_list))
-    print(averages)
     df = pd.DataFrame(dict(
         date=dates,
         pain_values=averages
@@ -585,20 +589,20 @@ def public_dashboard_page():
                 width=630,
                 height=260,
     )
+    # Encode plot to be read by html
     line_graph_four = json.dumps(line_four, cls=plotly.utils.PlotlyJSONEncoder)
 
-
+    # Get the list of messaged for the message board (which are not empty)
     message_list = Input.query.filter_by(category="nursing_home_life_experience").with_entities(Input.name).all()
     messages = [message[0] for message in message_list if message[0] != '']
+    # Create a loop of messages so that the animation of the message board continues. 
     if len(messages) < 400:
         messages = messages * round(500/len(messages))
 
-
-
-    
-
+    # Get the number of residents and number of nursing homes registered
     num_residents = len(User.query.all())
     num_nursing_home = len(NursingHome.query.all())
+
     return render_template("public-dashboard.html",graph_activities=graph_activities, mood_ratio=mood_ratio,
                             detailed_mood_ratio=detailed_mood_ratio, state_pie_chart=state_pie_chart,
                             line_graph_one=line_graph_one, line_graph_two=line_graph_two,
@@ -637,18 +641,6 @@ def user_input():
         text_area_msg_board = request.form.get('input_message_board')
         regular_pain_ache_csv = request.form.get('input_regular_pain_ache')
         
-        # print()
-        # print(input_category)
-        # print()
-        
-        # print("CSV-activity:", activity_csv)
-        # print("CSV-wellbeing:", wellbeing_csv)
-        # print("CSV-medication:", medication_reaction_csv)
-        # print("CSV-walk:", difficulty_walking_csv)
-        # print("CSV-food:", food_quality_csv)
-        # print("CSV-pain:", regular_pain_ache_csv)
-        
-        # print()
 
         activity_list = activity_csv.split(',')[:-1]
         wellbeing_list = wellbeing_csv.split(',')[:-1]
@@ -660,13 +652,6 @@ def user_input():
         input_activity_set = set(activity_list)
         input_wellbeing_set = set(wellbeing_list)
         
-        # print("LIST-activity:", activity_list)
-        # print("LIST-wellbeing:", wellbeing_list)
-        # print("LIST-medication:", medication_reaction_list)
-        # print("LIST-walk:", difficulty_walking_list)
-        # print("LIST-food:", food_quality_list)
-        
-        # print()
         
         # Filter and keep valid inputs, in case someone changes the input names to something else using inspect mode
         existing_input_options_activity_rows = InputOptions.query.filter_by(category="activity", 
@@ -694,7 +679,7 @@ def user_input():
                                             nursing_home_id=current_user.nursing_home_id)
                 db.session.add(activity_input)
                 db.session.commit()
-                # print(activity)
+                
             return redirect(request.url)
         
         elif input_category == 'wellbeing':
@@ -712,7 +697,7 @@ def user_input():
                                             nursing_home_id=current_user.nursing_home_id)
                 db.session.add(wellbeing_input)
                 db.session.commit()
-                # print(wellbeing)
+               
             return redirect(request.url)
 
         # Convert the yes/no, 1-5 rating questions into right value
