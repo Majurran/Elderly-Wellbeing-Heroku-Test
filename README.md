@@ -36,7 +36,9 @@ python main.py
 
 ## Viewing The App
 
-Go to `http://127.0.0.1:5000`
+Main Website: `http://127.0.0.1:5000`
+
+Public Dashboard: `http://127.0.0.1:5000/public-dashboard`
 
 ## Live Implementation URL
 Main Website: https://elderly-wellbeing.herokuapp.com/
