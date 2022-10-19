@@ -346,7 +346,7 @@ def public_dashboard_page():
     for actvity_count_pair in activity_count_pairs:
         activity.append(actvity_count_pair[0])
         activity_frequency.append(actvity_count_pair[1])
-
+    # Bar Chart for Activities chosen by user
     activities_bar_chart = go.Figure(data=[go.Bar(x=activity, y=activity_frequency)])
     activities_bar_chart.update_layout(
                 width=640,
@@ -395,6 +395,7 @@ def public_dashboard_page():
                 title = "Overall Happy vs Sad Proportion",
 
     )
+    # Encode plot to be read by html
     mood_ratio = json.dumps(mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
     detailed_mood_pie_chart = go.Figure(data = [go.Pie(labels = detailed_moods, values = detailed_percentage)])
@@ -403,6 +404,7 @@ def public_dashboard_page():
                 height=424,
                 title = "Detailed Emotion Proportions"
     )
+    # Encode plot to be read by html
     detailed_mood_ratio = json.dumps(detailed_mood_pie_chart, cls=plotly.utils.PlotlyJSONEncoder)
 
 
@@ -432,6 +434,7 @@ def public_dashboard_page():
                 width=400,
                 height=400,
     )
+    # Encode plot to be read by html
     state_pie_chart = json.dumps(state_pie, cls=plotly.utils.PlotlyJSONEncoder)
 
     # Monthly Overall Rating of Walking Difficulty
@@ -469,6 +472,7 @@ def public_dashboard_page():
                 height=260,
                 yaxis={"tickvals" : [1,2,3,4,5]}
     )
+    # Encode plot to be read by html
     line_graph_one = json.dumps(line_one, cls=plotly.utils.PlotlyJSONEncoder)
 
     # Monthly Overall Rating of Food Quality
@@ -508,6 +512,7 @@ def public_dashboard_page():
                 height=260,
                 yaxis={"tickvals" : [1,2,3,4,5]}
     )
+    # Encode plot to be read by html
     line_graph_two = json.dumps(line_two, cls=plotly.utils.PlotlyJSONEncoder)
 
     # Medication
@@ -547,6 +552,7 @@ def public_dashboard_page():
                 width=630,
                 height=260,
     )
+    # Encode plot to be read by html
     line_graph_three = json.dumps(line_three, cls=plotly.utils.PlotlyJSONEncoder)
 
     # Aches and Pains
@@ -583,6 +589,7 @@ def public_dashboard_page():
                 width=630,
                 height=260,
     )
+    # Encode plot to be read by html
     line_graph_four = json.dumps(line_four, cls=plotly.utils.PlotlyJSONEncoder)
 
     # Get the list of messaged for the message board (which are not empty)
