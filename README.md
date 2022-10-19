@@ -40,20 +40,9 @@ Go to `http://127.0.0.1:5000`
 
 ## Live Implementation URL
 https://elderly-wellbeing.herokuapp.com/ 
+https://elderly-wellbeing.herokuapp.com/public-dashboard 
 
-
-
-## (Optional) djLint Formatter 
-Using the Prettier formatter messes up the Jinja2 format in the HTML files.
-You can use djLint to format the HTML pages with Jinja2.
-djLint documentation: https://djlint.com/docs/formatter/
-
-To review what may change in formatting run (or change the . to another file path like a folder or specific file):
-```bash
-djlint . --check --format-js --format-css --quiet --indent 2
-```
-
-To format the code and update files run (or change the . to another file path like a folder or specific file):
-```bash
-djlint . --reformat --format-js --format-css --quiet --indent 2
-```
+## List of Software Reused and Dependencies
+*	Bootstrap v4.4.1 (https://getbootstrap.com/)
+*	Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
+*	The three files chat.html, chat_style.css and socketio.js come from Sandeep Sudhakaran at https://github.com/sandeepsudhakaran/rchat-app on the 12th of May 2019
