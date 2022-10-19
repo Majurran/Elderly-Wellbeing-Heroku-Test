@@ -39,8 +39,9 @@ python main.py
 Go to `http://127.0.0.1:5000`
 
 ## Live Implementation URL
-https://elderly-wellbeing.herokuapp.com/ 
-https://elderly-wellbeing.herokuapp.com/public-dashboard 
+Main Website: https://elderly-wellbeing.herokuapp.com/
+
+Public Dashboard: https://elderly-wellbeing.herokuapp.com/public-dashboard 
 
 ## List of Software Reused and Dependencies
 *	Bootstrap v4.4.1 (https://getbootstrap.com/)
