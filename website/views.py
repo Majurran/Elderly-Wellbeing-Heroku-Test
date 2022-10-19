@@ -390,7 +390,7 @@ def public_dashboard_page():
     
     mood_pie_chart = go.Figure(data = [go.Pie(labels = moods, values = overall_percentage)])
     mood_pie_chart.update_layout(
-                width=375,
+                width=300,
                 height=424,
                 title = "Overall Happy vs Sad Proportion",
 
@@ -400,7 +400,7 @@ def public_dashboard_page():
 
     detailed_mood_pie_chart = go.Figure(data = [go.Pie(labels = detailed_moods, values = detailed_percentage)])
     detailed_mood_pie_chart.update_layout(
-                width=375,
+                width=300,
                 height=424,
                 title = "Detailed Emotion Proportions"
     )
