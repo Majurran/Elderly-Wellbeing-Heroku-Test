@@ -43,8 +43,7 @@
               }
           }
         </style>
-        
-      
+             
 </head>
 
 <nav class="navbar navbar-expand-lg "
@@ -67,9 +66,6 @@ style="background-color: rgb(140,98,57);
 </div>
 </div>
 </nav>
-<!--
-    Easy way to comment haha.
--->
 <div class="container" style="max-width:2000px">
     <div class="header">
         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -85,7 +81,6 @@ style="background-color: rgb(140,98,57);
                         <div class="numbers">
                            <p class="card-category">Number of Residents on Website</p>
                            <p class="card-title">{{num_residents}}</p>
-                           <!-- Change This  -->
                            <p></p>
                         </div>
                      </div>
@@ -112,7 +107,6 @@ style="background-color: rgb(140,98,57);
                         <div class="numbers">
                            <p class="card-category">Number of Nursing homes Registered</p>
                            <p class="card-title">{{num_nursing_home}}</p>
-                           <!-- Change This  -->
                            <p></p>
                         </div>
                      </div>
@@ -135,20 +129,10 @@ style="background-color: rgb(140,98,57);
                  <p class="card-category">Mood visualisation</p>
               </div>
               <div class="card-body">
-                 <!-- <div style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;" class="chartjs-size-monitor">
-                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                       <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-                    </div>
-                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                       <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                    </div>
-                    </div> -->
                     <div class="pie">
                         <div id="chart" class="chart"></div>
                         <div id="chart-two" class="chart-two"></div>
                     </div>
-                 <!-- <div id="Detailed-Mood-Graph" class="Detailed-Mood-Graph"></div> -->
-                 <!-- <div id="Activities-Graph" class="Activities-Graph"></div> -->
               </div>
               <div class="card-footer ">
                <hr>
@@ -187,21 +171,13 @@ style="background-color: rgb(140,98,57);
         </div>
      </div>
 </div>
-    <!-- <div class="plots">
-        <div class="pie">
-            <div id="chart" class="chart"></div>
-            <div id="chart-two" class="chart-two"></div>
-        </div>
-
-        <div class="bar">
-            <div id="activity-chart" class="activity-chart"></div>
-        </div>
-    </div> -->
+   
    <div class="footer">
    <button type="button"
    class="btn btn-secondary"
    onclick="location.href='/admin'">Go Back</button>
    </div>
+   <!-- plots-->
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script type="text/javascript">
       var graphs = {{ graphJSON_mood | safe }};

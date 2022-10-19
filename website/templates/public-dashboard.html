@@ -12,9 +12,6 @@
    <link rel="stylesheet" href="https://demos.creative-tim.com/paper-dashboard/assets/css/paper-dashboard.min.css?v=2.0.1"/>
    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.js"></script>
-   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> -->
-   <!-- {% block title %}Dashboard{% endblock %} -->
-   
 </head>
 {% block content %}
 <nav class="navbar navbar-expand-lg "
@@ -26,12 +23,7 @@ style="background-color: rgb(47, 44, 43);
            >
   </div>
 <div class="navbar-nav" style="width: 98vw;justify-content:space-between;">
-   <!-- <a href="{{ home_href }}" style="text-decoration:none;color:black;"><span class="nav-item nav-link" style="font-size: 30px;">Elderly Wellbeing</span></a> -->
    <div class="d-flex flex-nav" style="line-height: 45px;margin-right:65px;">
-
-     <!-- <span class="nav-item nav-link current-time font24"></span>
-     <span class="nav-item nav-link pointer font24"
-           onclick="location.href='/logout'">Log out</span> -->
    </div>
  
 </div>
@@ -39,12 +31,6 @@ style="background-color: rgb(47, 44, 43);
 </nav>
 <body style="background-color:f4f3ef;">
    <div id="myCarousel" class="carousel slide">
-   <!-- Menu -->
-   <!-- <ol class="carousel-indicators">
-      <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
-      <li data-target="#myCarousel" data-slide-to="1"></li>
-      <li data-target="#myCarousel" data-slide-to="2"></li>
-   </ol> -->
    <!-- Items -->
    <div class="carousel-inner">
       <!-- Item 1 -->
@@ -63,7 +49,6 @@ style="background-color: rgb(47, 44, 43);
                            <div class="numbers">
                               <p class="card-category">Number of Residents on Website</p>
                               <p class="card-title">{{num_residents}}</p>
-                              <!-- Change This  -->
                               <p></p>
                            </div>
                         </div>
@@ -90,7 +75,6 @@ style="background-color: rgb(47, 44, 43);
                            <div class="numbers">
                               <p class="card-category">Number of Nursing homes Registered</p>
                               <p class="card-title">{{num_nursing_home}}</p>
-                              <!-- Change This  -->
                               <p></p>
                            </div>
                         </div>
@@ -113,17 +97,7 @@ style="background-color: rgb(47, 44, 43);
                      <p class="card-category">Mood visualisation</p>
                   </div>
                   <div class="card-body">
-                     <!-- <div style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;" class="chartjs-size-monitor">
-                        <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                           <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-                        </div>
-                        <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                           <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                        </div>
-                        </div> -->
                      <span id="Mood-Graph" class="Mood-Graph" style="display: flex;"> <span id="Detailed-Mood-Graph" class="Detailed-Mood-Graph"></span></span>
-                     <!-- <div id="Detailed-Mood-Graph" class="Detailed-Mood-Graph"></div> -->
-                     <!-- <div id="Activities-Graph" class="Activities-Graph"></div> -->
                   </div>
                   <div class="card-footer ">
 
@@ -206,7 +180,6 @@ style="background-color: rgb(47, 44, 43);
                </div>
             </div>
          </div>
-         <!--I think we needed that. One sec I'm going to reformat the code-->
          <div class="row">
             <div class="col-md-6">
                <div class="card ">
@@ -249,20 +222,11 @@ style="background-color: rgb(47, 44, 43);
                      </div>
                   </div>
                </div>
-            </div>
-               <!-- <div id="Activities-Graph" class="Activities-Graph"></div> -->
-            
+            </div>       
          </div>
       </div>
          <!-- Item 3 -->
-                  <!-- Item 3 -->
             <div class="item">
-                  <!-- <img src="https://picsum.photos/1500/600/?image=3" />
-                  <div class="container">
-                     <div class="carousel-caption">
-                        <h1>Percentage-based sizing</h1>
-                        <p>With "mobile-first" there is now only one percentage-based grid.</p>
-                        <p><a class="btn btn-large btn-primary" href="#">Browse gallery</a></p> -->
                         <div class="col-md-8 third">
                            <div class="card" style="height: 600px;">
                               <div class="card-header ">
@@ -272,11 +236,7 @@ style="background-color: rgb(47, 44, 43);
                               <div id="myDiv" class="card-body" style="overflow:hidden">
                                  <div class="project-container">
                                     <div id="messages" class="content" style="background-color: white;">
-                                       <!-- <div class="project title">
-                                          Message Board
-                                       </div> -->
                                        {% for sentence in sentences %}
-      
                                        <div class="project">
                                              <div>
                                                 Message <br />
@@ -329,14 +289,6 @@ style="background-color: rgb(47, 44, 43);
 </div>
 </div>
 </div>
-<!-- Post Info
-   <div style='position:fixed;bottom:0;left:0;    
-               background:#d3d3d3;width:100%;'>
-       About this SO Question: 
-       <a href='http://stackoverflow.com/q/20615100/1366033'>Add Play/Pause button to bootstrap carousel</a><br/>
-       Find documentation: <a href='http://getbootstrap.com/css/'>Get Bootstrap 3.0</a><br/>
-       Fork This Skeleton Here <a href='http://jsfiddle.net/KyleMit/kcpma/'>Bootrsap 3.0 Skeleton</a><br/>
-   <div> -->
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script type="text/javascript">
    var graphs = {{ graph_activities | safe }};
@@ -362,8 +314,6 @@ style="background-color: rgb(47, 44, 43);
    
    var line_four = {{ line_graph_four | safe }};
    Plotly.plot('Line-Graph-Four', line_four, {});
-   
-   
-   
+
 </script>
 {% endblock %}
