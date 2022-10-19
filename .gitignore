@@ -1,5 +1,6 @@
 ##### User Added Ignores #####
 website/__pycache__
+website/*.db
 website/static/input_option_img/*
 
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,flask,python,pycharm
